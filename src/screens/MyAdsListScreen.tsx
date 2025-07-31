@@ -12,7 +12,6 @@ import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { MyAdsStackParamList } from '../navigation/MyAdsStack';
 
-
 type MyAdsListScreenRouteProp = RouteProp<MyAdsStackParamList, 'MyAdsListScreen'>;
 type NavigationProp = NativeStackNavigationProp<MyAdsStackParamList>;
 
@@ -72,21 +71,18 @@ const MyAdsListScreen: React.FC = () => {
         <View style={{ width: 24 }} />
       </View>
 
-      {/* Category Label */}
-      <Text style={styles.categoryText}>{selectedTab} {category}</Text>
-
       {/* Tabs */}
       <View style={styles.tabRow}>
         {['Live', 'Upcoming', 'Completed'].map((tab) => {
-          const selected = selectedTab === tab;
+          const isSelected = selectedTab === tab;
           return (
             <TouchableOpacity
               key={tab}
-              style={[styles.tab, selected && styles.tabSelected]}
+              style={[styles.tab, isSelected && styles.tabSelected]}
               onPress={() => setSelectedTab(tab)}
             >
-              <Text style={[styles.tabText, selected && styles.tabTextSelected]}>
-                {tab} {category}
+              <Text style={[styles.tabText, isSelected && styles.tabTextSelected]}>
+                {tab} Car
               </Text>
             </TouchableOpacity>
           );
@@ -100,6 +96,7 @@ const MyAdsListScreen: React.FC = () => {
         renderItem={renderAdCard}
         numColumns={2}
         contentContainerStyle={styles.grid}
+        showsVerticalScrollIndicator={false}
       />
     </View>
   );
@@ -125,25 +122,17 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#000',
   },
-  categoryText: {
-    fontSize: 16,
-    fontWeight: '500',
-    marginLeft: 20,
-    marginBottom: 10,
-    color: '#333',
-  },
   tabRow: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    justifyContent: 'center',
+    gap: 10,
+    paddingVertical: 12,
   },
   tab: {
-    paddingVertical: 6,
-    paddingHorizontal: 14,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
     borderRadius: 20,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#F0F0F0',
   },
   tabSelected: {
     backgroundColor: '#216DBD',
@@ -157,7 +146,8 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   grid: {
-    padding: 10,
+    paddingHorizontal: 10,
+    paddingBottom: 20,
   },
   card: {
     width: '47%',
