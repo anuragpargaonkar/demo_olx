@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Alert,
   Dimensions,
+  Platform,
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '../navigation/AuthStack';
@@ -15,7 +16,7 @@ import { useAuth } from '../../App';
 
 type LoginScreenNavigationProp = NativeStackNavigationProp<AuthStackParamList, 'Login'>;
 
-const { height } = Dimensions.get('window');
+const { height, width } = Dimensions.get('window');
 
 const LoginScreen = () => {
   const navigation = useNavigation<LoginScreenNavigationProp>();
@@ -47,16 +48,16 @@ const LoginScreen = () => {
 
   return (
     <View style={styles.container}>
-      {/* Top Blue Section */}
-      <View style={styles.topSection}>
+      {/* Top Blue Background */}
+      <View style={styles.topBackground}>
         <Text style={styles.logo}>LOGO</Text>
       </View>
 
-      {/* Bottom White Section */}
-      <View style={styles.bottomSection} />
+      {/* Curved Transition Background */}
+      <View style={styles.curvedTransition} />
 
-      {/* Login Card */}
-      <View style={styles.formContainer}>
+      {/* Pop-in Login Card */}
+      <View style={styles.card}>
         <Text style={styles.title}>Login</Text>
         <Text style={styles.subtitle}>
           Lorem ipsum dolor sit amet consectetur. Ipsum massa turpis morbi platea. Vitae habitant duis.
@@ -107,43 +108,57 @@ export default LoginScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#fff',
   },
-  topSection: {
-    height: height * 0.4,
-    backgroundColor: '#2F7CA2', // ✅ Exact blue from image
+  topBackground: {
+    height: height * 0.35,
+    backgroundColor: '#3282AA',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  bottomSection: {
-    flex: 1,
-    backgroundColor: '#ffffff',
+    borderBottomLeftRadius: 60,
+    borderBottomRightRadius: 60,
   },
   logo: {
     color: '#fff',
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: 'bold',
   },
-  formContainer: {
+  curvedTransition: {
+    position: 'absolute',
+    top: height * 0.33,
+    left: 0,
+    right: 0,
+    height: height * 0.67,
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 60,
+    borderTopRightRadius: 60,
+    zIndex: 0,
+  },
+  card: {
     position: 'absolute',
     top: height * 0.28,
     alignSelf: 'center',
-    width: '90%',
+    width: '85%',
     backgroundColor: '#fff',
     borderRadius: 12,
     padding: 20,
-    elevation: 5,
+    zIndex: 2,
+
+    // iOS shadow
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+
+    // Android elevation
+    elevation: 10,
   },
   title: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 8,
     color: '#000',
     textAlign: 'center',
+    marginBottom: 6,
   },
   subtitle: {
     fontSize: 12,
