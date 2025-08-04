@@ -20,22 +20,22 @@ type MyAdsScreenNavigationProp = NativeStackNavigationProp<
 const categories = [
   {
     id: 'car',
-    label: 'Add Car',
+    label: ' Car',
     image: require('../assets/icons/car.png'),
   },
   {
     id: 'bike',
-    label: 'Add Bike',
+    label: 'Bike',
     image: require('../assets/icons/bike.png'),
   },
   {
     id: 'laptop',
-    label: 'Add Laptop',
+    label: ' Laptop',
     image: require('../assets/icons/laptop.png'),
   },
   {
     id: 'mobile',
-    label: 'Add Mobile',
+    label: ' Mobile',
     image: require('../assets/icons/mobile.png'),
   },
 ];
@@ -51,12 +51,12 @@ const MyAdsScreen: React.FC = () => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icon name="arrow-left" size={24} color="#000" />
         </TouchableOpacity>
-        <Text style={styles.title}>What are you Selling?</Text>
+        <Text style={styles.title}>My Ads</Text>
         <View style={{ width: 24 }} />
       </View>
 
       {/* Subheading */}
-      <Text style={styles.subtitle}>Add Product</Text>
+      <Text style={styles.subtitle}>Select Categories</Text>
       <Text style={styles.description}>
         Lorem ipsum dolor sit amet consectetur. Ipsum massa turpis morbi platea.
         Vitae habitant duis.
@@ -80,7 +80,7 @@ const MyAdsScreen: React.FC = () => {
                 resizeMode="contain"
               />
               <Text style={[styles.cardLabel, isSelected && { color: '#fff' }]}>
-                + {item.label}
+                 {item.label}
               </Text>
             </TouchableOpacity>
           );
