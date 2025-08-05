@@ -4,13 +4,19 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  Alert,
   TouchableOpacity,
   TextInput,
   Image,
-  Platform
+  Platform,
+  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { MyAdsStackParamList } from '../navigation/MyAdsStack';
+
+// Define navigation type
+type HomeScreenNavigationProp = NativeStackNavigationProp<MyAdsStackParamList, 'Home'>;
 
 const categories = [
   { id: '1', name: 'Vehicle', icon: require('../assets/icons/Vehicle.png'), bgColor: '#FFF4CC' },
@@ -30,7 +36,7 @@ const products = [
     price: '₹2,50,000',
     specs: '2009 • 150,000 km',
     location: 'Baner, Pune',
-    image: require('../assets/icons/Hyundai.png') // Your actual uploaded image
+    image: require('../assets/icons/Hyundai.png'),
   },
   {
     id: '2',
@@ -38,7 +44,7 @@ const products = [
     price: '₹2,50,000',
     specs: '2009 • 150,000 km',
     location: 'Baner, Pune',
-    image: require('../assets/icons/Hyundai.png') // Same image for demo
+    image: require('../assets/icons/Hyundai.png'),
   },
   {
     id: '3',
@@ -46,7 +52,7 @@ const products = [
     price: '₹2,50,000',
     specs: '2009 • 150,000 km',
     location: 'Baner, Pune',
-    image: require('../assets/icons/Hyundai.png') // Same image for demo
+    image: require('../assets/icons/Hyundai.png'),
   },
   {
     id: '4',
@@ -54,13 +60,20 @@ const products = [
     price: '₹2,50,000',
     specs: '2009 • 150,000 km',
     location: 'Baner, Pune',
-    image: require('../assets/icons/Hyundai.png') // Same image for demo
+    image: require('../assets/icons/Hyundai.png'),
   },
 ];
 
 const HomeScreen = () => {
+  const navigation = useNavigation<HomeScreenNavigationProp>();
+
   const handleCategoryPress = (name: string) => {
-    Alert.alert('Category', `You selected: ${name}`);
+    if (name === 'Vehicle') {
+      // The screen name 'CarList' must match the name in MyAdsStack.tsx
+      navigation.navigate('CarListScreen');
+    } else {
+      Alert.alert('Coming Soon', `You selected: ${name}`);
+    }
   };
 
   return (
@@ -98,12 +111,13 @@ const HomeScreen = () => {
 
         <View style={styles.categoryContainer}>
           {categories.map((cat) => (
-            <TouchableOpacity key={cat.id} style={styles.categoryItem} onPress={() => handleCategoryPress(cat.name)}>
+            <TouchableOpacity
+              key={cat.id}
+              style={styles.categoryItem}
+              onPress={() => handleCategoryPress(cat.name)}
+            >
               <View style={[styles.iconWrapper, { backgroundColor: cat.bgColor }]}>
-                <Image
-                  source={cat.icon}
-                  style={styles.categoryIcon}
-                />
+                <Image source={cat.icon} style={styles.categoryIcon} />
               </View>
               <Text style={styles.categoryText}>{cat.name}</Text>
             </TouchableOpacity>
@@ -120,7 +134,9 @@ const HomeScreen = () => {
             <View key={product.id} style={styles.productCard}>
               <Image source={product.image} style={styles.productImage} />
               <Text style={styles.productPrice}>{product.price}</Text>
-              <Text style={styles.productTitle} numberOfLines={1}>{product.title}</Text>
+              <Text style={styles.productTitle} numberOfLines={1}>
+                {product.title}
+              </Text>
               <Text style={styles.productSpecs}>{product.specs}</Text>
               <View style={styles.productLocation}>
                 <Icon name="location-outline" size={14} color="#888" />
@@ -134,6 +150,7 @@ const HomeScreen = () => {
   );
 };
 
+// Styles (same as before)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -153,7 +170,7 @@ const styles = StyleSheet.create({
   locationText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: '500'
+    fontWeight: '500',
   },
   searchWrapper: {
     position: 'absolute',
@@ -189,11 +206,11 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   sectionTitle: {
     fontSize: 16,
-    fontWeight: '600'
+    fontWeight: '600',
   },
   seeAllBtn: {
     flexDirection: 'row',
@@ -203,13 +220,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#007bff',
     marginRight: 2,
-    fontWeight: '500'
+    fontWeight: '500',
   },
   categoryContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-around',
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
   },
   categoryItem: {
     width: '22%',
@@ -227,17 +244,17 @@ const styles = StyleSheet.create({
   categoryIcon: {
     width: 30,
     height: 30,
-    resizeMode: 'contain'
+    resizeMode: 'contain',
   },
   categoryText: {
     fontSize: 12,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   productGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-around',
-    paddingBottom: 40
+    paddingBottom: 40,
   },
   productCard: {
     width: '45%',
@@ -251,7 +268,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 100,
     borderRadius: 8,
-    resizeMode: 'cover'
+    resizeMode: 'cover',
   },
   productPrice: {
     marginTop: 6,
@@ -261,12 +278,12 @@ const styles = StyleSheet.create({
   productTitle: {
     fontSize: 13,
     color: '#333',
-    marginTop: 2
+    marginTop: 2,
   },
   productSpecs: {
     fontSize: 12,
     color: '#777',
-    marginTop: 1
+    marginTop: 1,
   },
   productLocation: {
     flexDirection: 'row',
@@ -276,8 +293,8 @@ const styles = StyleSheet.create({
   locationTextCard: {
     fontSize: 12,
     color: '#888',
-    marginLeft: 4
-  }
+    marginLeft: 4,
+  },
 });
 
 export default HomeScreen;

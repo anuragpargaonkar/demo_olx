@@ -4,21 +4,40 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 // Bottom tab screens
-import HomeScreen from './src/screens/HomeScreen';
 import LiveBiddingScreen from './src/screens/LiveBiddingScreen';
 import SellProductStack from './src/navigation/SellProductStack';
-import MyAdsScreen from './src/screens/MyAdsScreen';
+import MyAdsStack from './src/navigation/MyAdsStack';
 import ProfileScreen from './src/screens/ProfileScreen';
 
 // Auth screens
 import LoginScreen from './src/screens/LoginScreen';
 import SignupScreen from './src/screens/SignupScreen';
 
-// Custom tab bar component
+// Custom tab bar
 import CustomTabBar from './src/components/CustomTabBar';
-import MyAdsStack from './src/navigation/MyAdsStack'; // ✅ Correct import
 
-// Authentication Context
+// Home stack (with HomeScreen and CarListScreen)
+import HomeScreen from './src/screens/HomeScreen';
+import CarListScreen from './src/screens/CarListScreen';
+import { createNativeStackNavigator as createHomeStack } from '@react-navigation/native-stack';
+
+type HomeStackParamList = {
+  HomeScreen: undefined;
+  CarListScreen: { categoryId: string; title: string };
+};
+
+const HomeStackNav = createHomeStack<HomeStackParamList>();
+
+function HomeStack() {
+  return (
+    <HomeStackNav.Navigator screenOptions={{ headerShown: false }}>
+      <HomeStackNav.Screen name="HomeScreen" component={HomeScreen} />
+      <HomeStackNav.Screen name="CarListScreen" component={CarListScreen} />
+    </HomeStackNav.Navigator>
+  );
+}
+
+// Auth context types
 interface User {
   id: string;
   name: string;
@@ -44,7 +63,7 @@ export const useAuth = () => {
   return context;
 };
 
-// Authentication Provider
+// Auth provider
 const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<User | null>(null);
@@ -53,7 +72,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     setUser(userData);
     setIsLoggedIn(true);
   };
-  
+
   const logout = () => {
     setUser(null);
     setIsLoggedIn(false);
@@ -66,44 +85,43 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   );
 };
 
-// Root stack to switch between Auth flow and Main app
+// Root stack (auth/main switch)
 export type RootStackParamList = {
   Auth: undefined;
   Main: undefined;
 };
 
-// Auth stack (Login and Sign up)
+const RootStack = createNativeStackNavigator<RootStackParamList>();
+
+// Auth stack
 const AuthStack = createNativeStackNavigator();
 function AuthStackScreen() {
   return (
     <AuthStack.Navigator screenOptions={{ headerShown: false }}>
-      <AuthStack.Screen name="Login" component={LoginScreen} />   
-      <AuthStack.Screen name="Signup" component={SignupScreen} /> 
+      <AuthStack.Screen name="Login" component={LoginScreen} />
+      <AuthStack.Screen name="Signup" component={SignupScreen} />
     </AuthStack.Navigator>
   );
 }
 
-// Bottom tabs for main app after login
+// Bottom tabs for main app
 const Tab = createBottomTabNavigator();
 function MainTabNavigator() {
   return (
     <Tab.Navigator
-      tabBar={props => <CustomTabBar {...props} />}  // Use custom tab bar
+      tabBar={props => <CustomTabBar {...props} />}
       screenOptions={{ headerShown: false }}
     >
-      <Tab.Screen name="Home" component={HomeScreen} />  
-      <Tab.Screen name="Live Bidding" component={LiveBiddingScreen} /> 
-      <Tab.Screen name="Sell Product" component={SellProductStack} />  
-      <Tab.Screen name="My Ads" component={MyAdsStack} />  
+      <Tab.Screen name="Home" component={HomeStack} />
+      <Tab.Screen name="Live Bidding" component={LiveBiddingScreen} />
+      <Tab.Screen name="Sell Product" component={SellProductStack} />
+      <Tab.Screen name="My Ads" component={MyAdsStack} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );
 }
 
-// Root stack decides what to show: Auth or Main app
-const RootStack = createNativeStackNavigator<RootStackParamList>();
-
-// App Navigator Component
+// App navigator
 const AppNavigator = () => {
   const { isLoggedIn } = useAuth();
 
@@ -111,15 +129,16 @@ const AppNavigator = () => {
     <NavigationContainer>
       <RootStack.Navigator screenOptions={{ headerShown: false }}>
         {isLoggedIn ? (
-          <RootStack.Screen name="Main" component={MainTabNavigator} />  // Show main app if logged in
+          <RootStack.Screen name="Main" component={MainTabNavigator} />
         ) : (
-          <RootStack.Screen name="Auth" component={AuthStackScreen} />  // Show login/signup if not logged in
+          <RootStack.Screen name="Auth" component={AuthStackScreen} />
         )}
       </RootStack.Navigator>
     </NavigationContainer>
   );
 };
 
+// Root App
 export default function App() {
   return (
     <AuthProvider>
