@@ -16,7 +16,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { MyAdsStackParamList } from '../navigation/MyAdsStack';
 
 // Define navigation type
-type HomeScreenNavigationProp = NativeStackNavigationProp<MyAdsStackParamList, 'Home'>;
+type HomeScreenNavigationProp = NativeStackNavigationProp<MyAdsStackParamList, 'HomeScreen'>;
 
 const categories = [
   { id: '1', name: 'Vehicle', icon: require('../assets/icons/Vehicle.png'), bgColor: '#FFF4CC' },
@@ -70,7 +70,7 @@ const HomeScreen = () => {
   const handleCategoryPress = (name: string) => {
     if (name === 'Vehicle') {
       // The screen name 'CarList' must match the name in MyAdsStack.tsx
-      navigation.navigate('CarListScreen');
+      navigation.navigate('CarListScreen', { category: 'Vehicle' });
     } else {
       Alert.alert('Coming Soon', `You selected: ${name}`);
     }

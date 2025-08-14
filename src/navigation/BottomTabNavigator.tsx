@@ -7,11 +7,11 @@ import MyAdsScreen from '../screens/MyAdsScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import CustomTabBar from '../components/CustomTabBar';
 export type RootTabParamList = {
-  Home: undefined;
+   Home: undefined;
   'Live Bidding': undefined;
   'Sell Product': undefined;
   'My Ads': undefined;
-  Profile: undefined;
+   Profile: undefined;
 }; 
 const Tab = createBottomTabNavigator<RootTabParamList>();
 export default function BottomTabNavigator() {

@@ -6,7 +6,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 // Bottom tab screens
 import LiveBiddingScreen from './src/screens/LiveBiddingScreen';
 import SellProductStack from './src/navigation/SellProductStack';
-import MyAdsStack from './src/navigation/MyAdsStack';
+import MyAdsStack, { Product } from './src/navigation/MyAdsStack';
 import ProfileScreen from './src/screens/ProfileScreen';
 
 // Auth screens
@@ -20,10 +20,12 @@ import CustomTabBar from './src/components/CustomTabBar';
 import HomeScreen from './src/screens/HomeScreen';
 import CarListScreen from './src/screens/CarListScreen';
 import { createNativeStackNavigator as createHomeStack } from '@react-navigation/native-stack';
+import ProductDetailsScreen from './src/screens/ProductDetailsScreen';
 
 type HomeStackParamList = {
   HomeScreen: undefined;
   CarListScreen: { categoryId: string; title: string };
+  ProductDetailsScreen: { product: Product }
 };
 
 const HomeStackNav = createHomeStack<HomeStackParamList>();
@@ -33,6 +35,9 @@ function HomeStack() {
     <HomeStackNav.Navigator screenOptions={{ headerShown: false }}>
       <HomeStackNav.Screen name="HomeScreen" component={HomeScreen} />
       <HomeStackNav.Screen name="CarListScreen" component={CarListScreen} />
+      <HomeStackNav.Screen name="ProductDetailsScreen" component={ProductDetailsScreen} />
+
+      
     </HomeStackNav.Navigator>
   );
 }
