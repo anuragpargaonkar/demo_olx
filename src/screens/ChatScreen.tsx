@@ -7,43 +7,43 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
-import socket from "../socket"; // 👈 import your socket instance
-
+import socket from "../socket"; //  import your socket instance
+ 
 const ChatScreen = () => {
   const [messages, setMessages] = useState<{ text: string; fromMe: boolean }[]>(
     []
   );
   const [input, setInput] = useState("");
-
+ 
   useEffect(() => {
     // listen for server messages
     socket.on("message", (msg: string) => {
       setMessages((prev) => [...prev, { text: msg, fromMe: false }]);
     });
-
+ 
     return () => {
       socket.off("message");
     };
   }, []);
-
+ 
   const sendMessage = () => {
     if (input.trim() === "") return;
-
+ 
     // send to server
     socket.emit("sendMessage", input);
-
+ 
     // show in UI
     setMessages((prev) => [...prev, { text: input, fromMe: true }]);
     setInput("");
   };
-
+ 
   return (
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.userName}>Chat</Text>
       </View>
-
+ 
       {/* Chat Messages */}
       <ScrollView style={styles.chatContainer}>
         {messages.map((msg, index) => (
@@ -62,7 +62,7 @@ const ChatScreen = () => {
           </View>
         ))}
       </ScrollView>
-
+ 
       {/* Input Box */}
       <View style={{ flexDirection: "row", padding: 10 }}>
         <TextInput
@@ -76,6 +76,8 @@ const ChatScreen = () => {
             paddingHorizontal: 10,
           }}
           placeholder="Type a message..."
+          placeholderTextColor="gray"   // 👈 add this line
+
         />
         <TouchableOpacity
           onPress={sendMessage}
@@ -93,10 +95,10 @@ const ChatScreen = () => {
     </View>
   );
 };
-
+ 
 export default ChatScreen;
-
-// 🎨 Styles
+ 
+//  Styles
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -135,3 +137,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+ 
