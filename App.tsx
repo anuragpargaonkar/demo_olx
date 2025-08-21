@@ -21,11 +21,18 @@ import HomeScreen from './src/screens/HomeScreen';
 import CarListScreen from './src/screens/CarListScreen';
 import { createNativeStackNavigator as createHomeStack } from '@react-navigation/native-stack';
 import ProductDetailsScreen from './src/screens/ProductDetailsScreen';
+import ChatScreen from './src/screens/ChatScreen';
+
+// ✅ Import ChatScreen
 
 type HomeStackParamList = {
   HomeScreen: undefined;
   CarListScreen: { categoryId: string; title: string };
-  ProductDetailsScreen: { product: Product }
+  ProductDetailsScreen: { product: Product };
+  ChatScreen: undefined; // 👈 add this
+
+
+
 };
 
 const HomeStackNav = createHomeStack<HomeStackParamList>();
@@ -36,8 +43,8 @@ function HomeStack() {
       <HomeStackNav.Screen name="HomeScreen" component={HomeScreen} />
       <HomeStackNav.Screen name="CarListScreen" component={CarListScreen} />
       <HomeStackNav.Screen name="ProductDetailsScreen" component={ProductDetailsScreen} />
+      <HomeStackNav.Screen name="ChatScreen" component={ChatScreen} />
 
-      
     </HomeStackNav.Navigator>
   );
 }

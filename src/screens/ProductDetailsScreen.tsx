@@ -7,9 +7,10 @@ import {
   ScrollView,
   Image,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
-import { MyAdsStackParamList, Product } from '../navigation/MyAdsStack';
+import { MyAdsStackParamList } from '../navigation/MyAdsStack';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type AdDetailsScreenRouteProp = RouteProp<
   MyAdsStackParamList,
@@ -17,7 +18,7 @@ type AdDetailsScreenRouteProp = RouteProp<
 >;
 
 const ProductDetailsScreen: React.FC = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<MyAdsStackParamList>>();
   const route = useRoute<AdDetailsScreenRouteProp>();
   const { product } = route.params;
 
@@ -31,15 +32,31 @@ const ProductDetailsScreen: React.FC = () => {
           style={styles.backButton}
           onPress={() => navigation.goBack()}
         >
-          <Icon name="arrow-left" size={24} color="#fff" />
+          <Image
+            source={require('../assets/icons/left-arrow.png')}
+            style={styles.iconImage}
+          />
         </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.sendButton}
+          onPress={() => console.log('Send pressed')}
+        >
+          <Image
+            source={require('../assets/icons/send-icon.png')}
+            style={styles.iconImage}
+          />
+        </TouchableOpacity>
+
         <Image
-          source={product.image}
+          source={require('../assets/icons/Hyundai.png')}
           style={styles.carImage}
           resizeMode="cover"
         />
+
         <View style={styles.timerBadge}>
-          <Text style={styles.timerText}>⏰ {product.timeLeft}</Text>
+          <Icon name="clock-outline" size={16} color="#fff" style={{ marginRight: 6 }} />
+          <Text style={styles.timerText}>{product.timeLeft}</Text>
         </View>
       </View>
 
@@ -81,48 +98,38 @@ const ProductDetailsScreen: React.FC = () => {
 
       {/* Main content scroll view */}
       <ScrollView style={styles.content}>
-        {/* Price and Rating Row */}
-        <View style={styles.priceRow}>
-          <Text style={styles.carPrice}>{product.price}</Text>
-          <View style={styles.ratingBox}>
-            <Text style={styles.ratingText}>{product.rating}</Text>
-            <Icon name="star" size={14} color="#fff" />
+        <View style={styles.priceBox}>
+          <View style={styles.priceRow}>
+            <Text style={styles.carPrice}>{product.price}</Text>
+            <View style={styles.ratingBox}>
+              <Text style={styles.ratingText}>{product.rating}</Text>
+              <Icon name="star" size={14} color="#FFD700" />
+            </View>
+          </View>
+          <Text style={styles.carTitle}>{product.title}</Text>
+          <View style={styles.locationRow}>
+            <Icon name="map-marker" size={14} color="#666" />
+            <Text style={styles.locationText}>{product.location}</Text>
           </View>
         </View>
-        <Text style={styles.carTitle}>{product.title}</Text>
-        <View style={styles.locationRow}>
-          <Icon name="map-marker" size={14} color="#999" />
-          <Text style={styles.locationText}>{product.location}</Text>
-        </View>
 
-        {/* Details Section */}
         <View style={styles.detailsSection}>
           <Text style={styles.sectionTitle}>Details</Text>
-          <View style={styles.detailsGrid}>
-            <View style={styles.detailItem}>
-              <Text style={styles.detailLabel}>Brand -</Text>
-              <Text style={styles.detailValue}>{product.brand}</Text>
+          <View style={styles.detailsBox}>
+            <View style={styles.detailRow}>
+              <Text style={styles.detailText}>Brand - {product.brand}</Text>
+              <Text style={styles.detailText}>Model - {product.model}</Text>
             </View>
-            <View style={styles.detailItem}>
-              <Text style={styles.detailLabel}>Model -</Text>
-              <Text style={styles.detailValue}>{product.model}</Text>
+            <View style={styles.detailRow}>
+              <Text style={styles.detailText}>Year - {product.year}</Text>
+              <Text style={styles.detailText}>Fuel - {product.fuel}</Text>
             </View>
-            <View style={styles.detailItem}>
-              <Text style={styles.detailLabel}>Year -</Text>
-              <Text style={styles.detailValue}>{product.year}</Text>
-            </View>
-            <View style={styles.detailItem}>
-              <Text style={styles.detailLabel}>Fuel -</Text>
-              <Text style={styles.detailValue}>{product.fuel}</Text>
-            </View>
-            <View style={styles.detailItem}>
-              <Text style={styles.detailLabel}>KM driven -</Text>
-              <Text style={styles.detailValue}>{product.km} km</Text>
+            <View style={styles.detailRow}>
+              <Text style={styles.detailText}>KM driven - {product.km} km</Text>
             </View>
           </View>
         </View>
 
-        {/* Description Section */}
         <View style={styles.descriptionSection}>
           <Text style={styles.sectionTitle}>Description</Text>
           <Text style={styles.descriptionText}>
@@ -131,10 +138,11 @@ const ProductDetailsScreen: React.FC = () => {
         </View>
       </ScrollView>
 
-      {/* Bottom Buttons */}
       <View style={styles.bottomButtons}>
-        <TouchableOpacity style={styles.chatButton}>
-          <Text style={styles.chatButtonText}>Chat</Text>
+        <TouchableOpacity
+          style={styles.chatButton}
+          onPress={() => navigation.navigate('ChatScreen')}> // 👈 added navigation
+          <Text style={styles.chatButtonText}>💬 Chat</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.bidButton}>
           <Text style={styles.bidButtonText}>Start Bidding</Text>
@@ -152,37 +160,45 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   header: {
-    height: 250,
+    height: 300,
     backgroundColor: '#fff',
     position: 'relative',
   },
   backButton: {
-    padding: 5,
     position: 'absolute',
     top: 50,
     left: 20,
     zIndex: 10,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    borderRadius: 20,
+  },
+  sendButton: {
+    position: 'absolute',
+    top: 50,
+    right: 20,
+    zIndex: 10,
+  },
+  iconImage: {
+    width: 28,
+    height: 28,
+    tintColor: '#fff',
   },
   carImage: {
     width: '100%',
     height: '100%',
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
   },
   timerBadge: {
     position: 'absolute',
     bottom: 10,
     right: 20,
-    backgroundColor: '#FFD700',
+    backgroundColor: '#FFCB3D',
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: 8,
+    borderRadius: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   timerText: {
     fontSize: 14,
-    color: '#000',
+    color: '#FFFFFF',
     fontWeight: '600',
   },
   toggleContainer: {
@@ -214,11 +230,16 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
   },
+  priceBox: {
+    backgroundColor: '#EAF3FA',
+    borderRadius: 10,
+    padding: 12,
+    marginTop: 20,
+  },
   priceRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 20,
   },
   carPrice: {
     fontSize: 24,
@@ -228,18 +249,14 @@ const styles = StyleSheet.create({
   ratingBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#4A90E2',
-    borderRadius: 5,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
   },
   ratingText: {
-    color: '#fff',
+    color: '#333',
     fontWeight: 'bold',
     marginRight: 4,
   },
   carTitle: {
-    fontSize: 18,
+    fontSize: 16,
     color: '#333',
     marginTop: 5,
   },
@@ -255,9 +272,6 @@ const styles = StyleSheet.create({
   },
   detailsSection: {
     marginTop: 20,
-    paddingVertical: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
   },
   sectionTitle: {
     fontSize: 18,
@@ -265,28 +279,20 @@ const styles = StyleSheet.create({
     color: '#333',
     marginBottom: 10,
   },
-  detailsGrid: {
+  detailsBox: {
+    backgroundColor: '#EAF3FA',
+    borderRadius: 10,
+    padding: 12,
+  },
+  detailRow: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
     justifyContent: 'space-between',
+    marginBottom: 6,
   },
-  detailItem: {
-    width: '48%',
-    backgroundColor: '#f9f9f9',
-    borderRadius: 8,
-    padding: 10,
-    marginBottom: 10,
-    flexDirection: 'row',
-  },
-  detailLabel: {
+  detailText: {
     fontSize: 14,
-    color: '#666',
-    marginRight: 4,
-  },
-  detailValue: {
-    fontSize: 14,
-    fontWeight: '500',
     color: '#333',
+    flex: 1,
   },
   descriptionSection: {
     marginTop: 10,
@@ -294,7 +300,10 @@ const styles = StyleSheet.create({
   descriptionText: {
     fontSize: 14,
     color: '#666',
+    backgroundColor: '#EAF3FA',
     lineHeight: 20,
+    padding: 10,
+    borderRadius: 8,
   },
   bottomButtons: {
     flexDirection: 'row',
@@ -307,26 +316,30 @@ const styles = StyleSheet.create({
   chatButton: {
     flex: 1,
     paddingVertical: 15,
-    backgroundColor: '#E5E5E5',
+    backgroundColor: '#143444',
     borderRadius: 12,
     alignItems: 'center',
     marginRight: 10,
+    bottom: 10,
+    borderWidth: 1,
+    borderColor: '#DDE3EB',
   },
   chatButtonText: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#FFFFFF',
   },
   bidButton: {
     flex: 1,
     paddingVertical: 15,
-    backgroundColor: '#4A90E2',
+    backgroundColor: '#143444',
     borderRadius: 12,
+    bottom: 10,
     alignItems: 'center',
   },
   bidButtonText: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#FFFFFF',
   },
 });
